@@ -56,19 +56,17 @@ class Student
 
   def self.find_by_name(name)
     sql = <<-SQL
-      SELECT *
-      FROM students
-      WHERE name = ?
-      LIMIT 1
+      SELECT * FROM students WHERE name = ?
     SQL
 
-    DB[:conn].execute(sql, name).map do |row|
-      self.new_from_db(row)
-    end.first
+    student = DB[:conn].execute(sql, name)
+      self.new_from_db(student[0])
   end
 
   def update
-    sql = "UPDATE students SET name = ?, grade = ? WHERE id = ?"
+    sql = <<-SQL
+    UPDATE students SET name = ?, grade = ? WHERE id = ?
+    SQL
     DB[:conn].execute(sql, self.name, self.grade, self.id)
   end
 
